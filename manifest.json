@@ -1,0 +1,22 @@
+{
+  "name": "Passport Scanner",
+  "version": "1.0",
+  "description": "Automates tasks for Passport Authentication",
+  "manifest_version": 2,
+  "permissions": [
+    "activeTab"
+  ],
+  "web_accessible_resources": [
+    "js/worker.min.js",
+    "js/tessearct-core.wasm.js",
+    "traineddata/*.traineddata.gz"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "http://*/*"
+      ],
+      "js": ["js/tesseract.min.js", "js/worker.min.js", "js/main.js"]
+    }
+  ]
+}
