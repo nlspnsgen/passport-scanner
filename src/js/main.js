@@ -1,5 +1,13 @@
 /* eslint func-names: ["error", "never"] */
 (function () {
+  // Injecting text into website
+  const strong = document.getElementsByTagName('strong')[0];
+  const div = document.createElement('div');
+  const content = document.getElementById('content');
+  div.style.cssText = 'background-color: black; color: white; padding-left: 5px';
+  div.innerHTML = '<div><h style="font-weight: bold">Niels Passport Scanner</h> <p> Press 1 and click on the passport frontside. Press 2 and click on the passport backside </p></div>';
+  content.insertBefore(div, strong);
+
   // Variables we generate
   let idVerificationDone;
   let adressVerificationDone;
@@ -79,6 +87,20 @@
     console.log('keyNum onkeypress: ', keyNum);
   };
 
+  const convertBoolToHtml = (attribute, b) => {
+    if (b) return `<p >${attribute}: <span style="color:green; font-weight: bold">correct</span></p>`;
+    return `<p> ${attribute}: <span style="color:red: font-weight: bold">false</span> </p>`;
+  };
+
+  const convertResultToHTML = (backCodeCorrect, birthDayCorrect, adressCorrect, nameCorrect) => {
+    const backCode = convertBoolToHtml('Backcode', backCodeCorrect);
+    const birthDate = convertBoolToHtml('Date Of Birth', birthDayCorrect);
+    const adress = convertBoolToHtml('Adress', adressCorrect);
+    const name = convertBoolToHtml('Name', nameCorrect);
+    return `<h style="font-weight: bold">Niels Passport Scanner</h> ${backCode} ${birthDate} ${adress} ${name}`;
+  };
+
+
   const verifyAll = () => {
     const expirationDate = getExpirationDate(passPortFrontText);
     const birthDate = getBirthDate(passPortFrontText);
@@ -87,22 +109,22 @@
     const birthDayCorrect = verifyBirthday(birthDate);
     const adressCorrect = verifyAdress();
     const nameCorrect = verifyName();
-    const alertMessage = `Backcode: ${backCodeCorrect}, Birthdate: ${birthDayCorrect}, Adress ${
-      adressCorrect}, Name: ${nameCorrect}`;
-
+    div.innerHTML = convertResultToHTML(
+      backCodeCorrect, birthDayCorrect, adressCorrect, nameCorrect,
+    );
     if (expirationDate && backCodeCorrect) {
       fillExpirationFields(expirationDate);
     }
-    alert(alertMessage);
   };
 
   const doOCR = (imageId, step) => {
+    div.innerHTML = '<h style="font-weight: bold">Niels Passport Scanner</h> <p> loading... </p>';
     const image = document.getElementById(imageId);
     const { TesseractWorker } = Tesseract; //eslint-disable-line
     const worker = new TesseractWorker({
-      workerPath: chrome.runtime.getURL('js/worker.min.js'),
+      workerPath: chrome.runtime.getURL('src/js/worker.min.js'),
       langPath: chrome.runtime.getURL('traineddata'),
-      corePath: chrome.runtime.getURL('js/tesseract-core.wasm.js'),
+      corePath: chrome.runtime.getURL('src/js/tesseract-core.wasm.js'),
     });
 
     worker

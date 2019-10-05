@@ -16,7 +16,5 @@
     "eslint-plugin-require": "0.0.1"
   },
   "dependencies": {
-    "react": "^16.10.2",
-    "react-dom": "^16.10.2"
   }
 }
