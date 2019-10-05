@@ -14,7 +14,7 @@
   "content_scripts": [
     {
       "matches": [
-        "http://*/*"
+        "http://localhost:3000/"
       ],
       "js": ["src/js/tesseract.min.js", "src/js/worker.min.js", "src/js/main.js"]
     }
